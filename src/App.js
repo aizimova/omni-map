@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, View, Dimensions } from 'react-native';
+import { AppRegistry, StyleSheet, View, Dimensions, Picker } from 'react-native';
 import MapView from 'react-native-maps';
 import axios from 'axios';
+import { formatDate } from './helpers';
+
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 0;
@@ -19,19 +21,23 @@ export default class MapExample extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA
       },
-      markers: []
+      markers: [],
+      articles: [],
+      currentArticle: ''
     };
   }
 
   componentDidMount() {
-    console.log('asdfasdf');
-    axios.get('http://192.168.102.96:3000/api/crimes')
+    axios.get('http://192.168.102.96:3000/api/articles')
     .then(res => {
-      console.log(res.data);
-      this.setState({ markers: res.data });
-    }).catch(e => {
-      console.error(e);
+      let articles = res.data;
+      this.setState({ articles });
+    }).catch(err => {
+      console.error(err);
     });
+  }
+
+  componentWillMount() {   
     navigator.geolocation.getCurrentPosition(
       position => {
         this.setState({
@@ -67,6 +73,35 @@ export default class MapExample extends Component {
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
   }
+
+  changeArticle(value) {
+    this.setState({ currentArticle: value });
+    let filter = JSON.stringify({
+      where: {
+        article: value
+      }
+    });
+    axios.get('http://192.168.102.96:3000/api/crimes?filter=' + filter)
+    .then(res => {
+      let markers = res.data;
+      markers.forEach((item, i) => {
+        let crimeArticle = item.article;
+        let catalogArticle = this.state.articles.find(a => a.code === value);
+        if (catalogArticle) {
+          item.title = catalogArticle.name;
+          item.date = formatDate(item.crime_date);
+          item.color = catalogArticle.color;
+        } else {
+          item.title = '';
+          item.date = '';
+          item.color = 'red';
+        }
+      });
+      this.setState({ markers });
+    }).catch(e => {
+      console.error(e);
+    });
+  }
   
   render() {
     return (
@@ -84,12 +119,27 @@ export default class MapExample extends Component {
                   latitude: marker.lat,
                   longitude: marker.lon
                 }}
-                title={ marker.article }
+                title={ marker.title }
+                description={ marker.date }
+                pinColor={ marker.color }
                 key={ ind }
               />
             )
           })}
         </MapView>
+        <Picker
+          selectedValue={ this.state.currentArticle }
+          onValueChange={ value => this.changeArticle(value) }
+        >
+          <Picker.Item label="Выберите тип преступления" value="" />
+          { this.state.articles.map((item, ind) => (
+            <Picker.Item
+              label={ `${item.name} (${item.code})` }
+              value={ item.code }
+              key={ ind }
+            />
+          )) }
+        </Picker>
       </View>
     );
   }
