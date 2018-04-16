@@ -3,6 +3,7 @@ import { AppRegistry, StyleSheet, View, Dimensions, Picker } from 'react-native'
 import MapView from 'react-native-maps';
 import axios from 'axios';
 import { formatDate } from './helpers';
+import config from './config.json';
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -28,7 +29,7 @@ export default class MapExample extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.103.14:3000/api/articles')
+    axios.get(`${config.backend}/articles`)
     .then(res => {
       let allArticles = res.data;
       let articles = [];
@@ -100,7 +101,7 @@ export default class MapExample extends Component {
           or: jsonValue
         }
       });
-      axios.get('http://192.168.103.14:3000/api/crimes?filter=' + filter)
+      axios.get(`${config.backend}/crimes?filter=${filter}`)
       .then(res => {
         let markers = res.data;
         markers.forEach((item, i) => {
