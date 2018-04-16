@@ -28,9 +28,22 @@ export default class MapExample extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.102.96:3000/api/articles')
+    axios.get('http://192.168.103.14:3000/api/articles')
     .then(res => {
-      let articles = res.data;
+      let allArticles = res.data;
+      let articles = [];
+      allArticles.forEach(item => {
+        let article = articles.find(a => a.name === item.name);
+        if (article) {
+          article.codes.push(item.code);
+        } else {
+          articles.push({
+            name: item.name,
+            codes: [item.code],
+            color: item.color
+          });
+        }
+      })
       this.setState({ articles });
     }).catch(err => {
       console.error(err);
@@ -76,31 +89,37 @@ export default class MapExample extends Component {
 
   changeArticle(value) {
     this.setState({ currentArticle: value });
-    let filter = JSON.stringify({
-      where: {
-        article: value
-      }
-    });
-    axios.get('http://192.168.102.96:3000/api/crimes?filter=' + filter)
-    .then(res => {
-      let markers = res.data;
-      markers.forEach((item, i) => {
-        let crimeArticle = item.article;
-        let catalogArticle = this.state.articles.find(a => a.code === value);
-        if (catalogArticle) {
-          item.title = catalogArticle.name;
-          item.date = formatDate(item.crime_date);
-          item.color = catalogArticle.color;
-        } else {
-          item.title = '';
-          item.date = '';
-          item.color = 'red';
+    let article = this.state.articles.find(item => item.name === value);
+    if (article) {
+      jsonValue = []
+      article.codes.forEach(code => jsonValue.push({
+        article: code
+      }));
+      let filter = JSON.stringify({
+        where: {
+          or: jsonValue
         }
       });
-      this.setState({ markers });
-    }).catch(e => {
-      console.error(e);
-    });
+      axios.get('http://192.168.103.14:3000/api/crimes?filter=' + filter)
+      .then(res => {
+        let markers = res.data;
+        markers.forEach((item, i) => {
+          let catalogArticle = this.state.articles.find(a => a.codes.indexOf(item.article) >= 0);
+          if (catalogArticle) {
+            item.title = catalogArticle.name;
+            item.date = formatDate(item.crime_date);
+            item.color = catalogArticle.color;
+          } else {
+            item.title = '';
+            item.date = '';
+            item.color = '#2E8B57';
+          }
+        });
+        this.setState({ markers });
+      }).catch(e => {
+        console.error(e);
+      });
+    }
   }
   
   render() {
@@ -131,11 +150,11 @@ export default class MapExample extends Component {
           selectedValue={ this.state.currentArticle }
           onValueChange={ value => this.changeArticle(value) }
         >
-          <Picker.Item label="Выберите тип преступления" value="" />
+          <Picker.Item label="Choose one" value="" />
           { this.state.articles.map((item, ind) => (
             <Picker.Item
-              label={ `${item.name} (${item.code})` }
-              value={ item.code }
+              label={ item.name }
+              value={ item.name }
               key={ ind }
             />
           )) }
