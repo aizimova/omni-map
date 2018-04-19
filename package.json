@@ -13,6 +13,7 @@
     "react-native-check-box": "^2.1.0",
     "react-native-google-places": "^2.5.0",
     "react-native-maps": "^0.21.0",
+    "react-native-maps-directions": "^1.6.0",
     "react-native-material-kit": "^0.5.1"
   },
   "devDependencies": {

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
-import { AppRegistry, StyleSheet, View, Dimensions, Button } from 'react-native';
+import { AppRegistry, StyleSheet, View, Dimensions, Button, Text} from 'react-native';
 import MapView from 'react-native-maps';
 import axios from 'axios';
 import { formatDate } from './helpers';
-import { MKTextField, MKColor } from 'react-native-material-kit';
 import config from './config.json';
 import CheckBox from 'react-native-check-box';
+import MapContainer from './components/MapContainer/index';
+
+
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -16,6 +17,7 @@ const LATITUDE_DELTA = 0.0124;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class MapExample extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +29,6 @@ export default class MapExample extends Component {
       },
       markers: [],
       articles: [],
-      currentArticle: ''
       checkedArticles: [],
       showCheckboxes: false
     };
@@ -196,32 +197,19 @@ export default class MapExample extends Component {
             </View>
           }
         </View>
-
-        <View style = {styles.form} >
-          <MKTextField
-            tintColor={ MKColor.Lime}
-            textInputStyle={{color: MKColor.Orange}}
-            // placeholder = 'Text…'
-            style={styles.textfield}
-            />
-        </View>
-        <View style={styles.buttonStyle1}>
-          <Button 
-            title="B1"
-            color="white"
-          />  
-        </View>
-
-        <View style={styles.buttonStyle2}>
-          <Button 
-            title="B2"
-            color="white"
-          />  
-        </View>
+        <MapContainer />
       </View>
    );
   }
 }
+
+
+
+
+
+
+
+
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -231,36 +219,12 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject
   },
-  buttonStyle1: {
-        height: 50,
-        width: 50,
-        marginLeft: 300,
-        margin: 10,
-        padding: 3,
-        backgroundColor: '#39CCCC',
-        borderRadius: 30
-  },
-  buttonStyle2: {
-        height: 50,
-        width: 50,
-        marginLeft: 300,
-        margin: 10,
-        padding: 3,
-        backgroundColor: '#39CCCC',
-        borderRadius: 30
-  },
-  textfield: {
-          height: 28,  // have to do it on iOS
-          marginTop: 32,
-          width: 28
-  },
   CheckBox: {
     padding: 10,
     paddingLeft: 10,
     paddingRight: 10,
     margin: 0,
-    position: 'relative',
-    color:'#39CCCC'
+    position: 'relative'
   },
   ButtonContainer: {
     position: 'absolute',
@@ -275,5 +239,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 5
   }
+  // ButtonSOS:{
+  //   backgroundColor: 'red',
+  //   height: 20,
+  //   width: 20,
+  //   marginLeft: 150
+
+  // }
 
 });
