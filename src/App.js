@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
 import { AppRegistry, StyleSheet, View, Dimensions, Button } from 'react-native';
 import MapView from 'react-native-maps';
 import axios from 'axios';
@@ -27,9 +26,13 @@ export default class MapExample extends Component {
       },
       markers: [],
       articles: [],
-      currentArticle: ''
       checkedArticles: [],
-      showCheckboxes: false
+      showCheckboxes: false,
+      showB1Form: false,
+      x: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE
+      }
     };
   }
 
@@ -65,6 +68,10 @@ export default class MapExample extends Component {
             longitude: position.coords.longitude,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
+          },
+          x: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
           }
         });
       },
@@ -137,19 +144,7 @@ export default class MapExample extends Component {
       this.setState({ markers: [] });
     }
   }
-
-  Press = () => {
-    this.state.articles.map((item, ind) => (
-      <CheckBox
-        style={ styles.CheckBox }
-        onClick={ () => this.clickArticle(item) }
-        isChecked={ !!this.state.checkedArticles.find(a => a === item) }
-        leftText={ item.name }
-        key={ ind }
-      />
-    ))
-  }
-  
+  takeinfolost
   render() {
     return (
       <View style={ styles.container }>
@@ -173,12 +168,25 @@ export default class MapExample extends Component {
               />
             )
           })}
+          { this.state.showB1Form &&
+            <MapView.Marker draggable
+              coordinate={this.state.x}
+              onDragEnd={(e) => this.setState({ 
+                x: e.nativeEvent.coordinate,
+                region: {
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitudeDelta: LONGITUDE_DELTA
+                }
+              })}
+            />
+          }
         </MapView>
-         
         <View style={ styles.ButtonContainer }>
           <Button
             color="white"
-            title = "Crime Types"
+            title = "Choose crimes"
             onPress = { () => this.setState({ showCheckboxes: !this.state.showCheckboxes }) }
           />
           { this.state.showCheckboxes && 
@@ -195,31 +203,47 @@ export default class MapExample extends Component {
               )) }
             </View>
           }
-        </View>
-
-        <View style = {styles.form} >
-          <MKTextField
-            tintColor={ MKColor.Lime}
-            textInputStyle={{color: MKColor.Orange}}
-            // placeholder = 'Text…'
-            style={styles.textfield}
-            />
-        </View>
+        </View>      
         <View style={styles.buttonStyle1}>
           <Button 
-            title="B1"
+            title="X"
             color="white"
-          />  
+            onPress= { () => {} }
+          />
         </View>
-
-        <View style={styles.buttonStyle2}>
+        <View style={ styles.buttonStyle2 }>
           <Button 
-            title="B2"
+            title="Y"
             color="white"
-          />  
+            onPress = { () => this.setState({ showB1Form: !this.state.showB1Form }) }
+          />
+          { this.state.showB1Form &&
+            <View style ={ styles.form }>
+              <MKTextField
+                tintColor={ MKColor.Lime }
+                textInputStyle={{ color: MKColor.Orange }}
+                placeholder = "Describe in details ..."
+                style={ styles.textfield }
+              />
+                <View style={ styles.buttonform }>
+                  <Button
+                    title = "upload pic"
+                    color = "white"
+                    onPress={ () => {} }
+                  />
+                </View>
+                <View style={ styles.buttonsubmit }>
+                  <Button
+                    title = "submit"
+                    color= "white"
+                    onPress={ () => this. }
+                  />
+                </View>
+              </View>
+          }
         </View>
       </View>
-   );
+    );
   }
 }
 const styles = StyleSheet.create({
@@ -234,8 +258,9 @@ const styles = StyleSheet.create({
   buttonStyle1: {
         height: 50,
         width: 50,
-        marginLeft: 300,
-        margin: 10,
+        marginRight: 300,
+        marginTop: 30,
+        marginLeft:20,
         padding: 3,
         backgroundColor: '#39CCCC',
         borderRadius: 30
@@ -243,16 +268,18 @@ const styles = StyleSheet.create({
   buttonStyle2: {
         height: 50,
         width: 50,
-        marginLeft: 300,
-        margin: 10,
+        marginRight: 300,
+        marginTop: 15,
+        marginLeft: 20,
         padding: 3,
         backgroundColor: '#39CCCC',
         borderRadius: 30
   },
   textfield: {
-          height: 28,  // have to do it on iOS
-          marginTop: 32,
-          width: 28
+          height: 95,  // have to do it on iOS
+          margin: 20,
+          width: 250,
+
   },
   CheckBox: {
     padding: 10,
@@ -260,7 +287,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     margin: 0,
     position: 'relative',
-    color:'#39CCCC'
   },
   ButtonContainer: {
     position: 'absolute',
@@ -268,12 +294,39 @@ const styles = StyleSheet.create({
     right: 10,
     width: 150,
     backgroundColor:'#39CCCC',
-    borderRadius: 8
+    borderRadius: 50
   },
   Checkboxes: {
     backgroundColor: '#FFF',
     marginTop: 10,
     borderRadius: 5
+  },
+  form: {
+    position: 'relative',
+    width:300,
+    height:120,
+    backgroundColor: "white",
+    zIndex: 2,
+    marginTop: 15
+  },
+  buttonform: {
+    width: '40%',
+    margin: 10,
+    height: 40,
+    bottom: 10,
+    position: 'absolute',
+    backgroundColor: "#39CCCC",
+    borderRadius:40
+  },
+  buttonsubmit: {
+    position:'absolute',
+    bottom: 10,
+    margin: 10,
+    height: 40,
+    width: '30%',
+    right:10,
+    backgroundColor: "#6A5ACD",
+    borderRadius:40
   }
 
 });
