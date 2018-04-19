@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, View, Dimensions, Picker } from 'react-native';
+import { AppRegistry, StyleSheet, View, Dimensions, Picker, Button } from 'react-native';
 import MapView from 'react-native-maps';
 import axios from 'axios';
 import { formatDate } from './helpers';
+import { MKTextField, MKColor } from 'react-native-material-kit'
+
+
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -24,11 +27,15 @@ export default class MapExample extends Component {
       markers: [],
       articles: [],
       currentArticle: ''
+      // markerDrag: {
+      //   longitude:
+      //   latitude:
+      // }
     };
   }
 
   componentDidMount() {
-    axios.get('http://192.168.102.96:3000/api/articles')
+    axios.get('http://192.168.102.178:3000/api/articles')
     .then(res => {
       let articles = res.data;
       this.setState({ articles });
@@ -81,7 +88,7 @@ export default class MapExample extends Component {
         article: value
       }
     });
-    axios.get('http://192.168.102.96:3000/api/crimes?filter=' + filter)
+    axios.get('http://192.168.102.178:3000/api/crimes?filter=' + filter)
     .then(res => {
       let markers = res.data;
       markers.forEach((item, i) => {
@@ -131,7 +138,7 @@ export default class MapExample extends Component {
           selectedValue={ this.state.currentArticle }
           onValueChange={ value => this.changeArticle(value) }
         >
-          <Picker.Item label="Выберите тип преступления" value="" />
+          <Picker.Item label="Choose one" value="" />
           { this.state.articles.map((item, ind) => (
             <Picker.Item
               label={ `${item.name} (${item.code})` }
@@ -140,7 +147,28 @@ export default class MapExample extends Component {
             />
           )) }
         </Picker>
-      </View>
+        <View style = {styles.form} >
+        <MKTextField
+          tintColor={ MKColor.Lime}
+          textInputStyle={{color: MKColor.Orange}}
+          // placeholder = 'Text…'
+          style={styles.textfield}
+          />
+        </View>
+        <View style={styles.buttonStyle1}>
+          <Button 
+            title="B1"
+            color="white"
+          />  
+        </View>
+
+        <View style={styles.buttonStyle2}>
+          <Button 
+            title="B2"
+            color="white"
+          />  
+        </View>
+      </View>  
     );
   }
 }
@@ -152,5 +180,29 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject
+  },
+  buttonStyle1: {
+        height: 50,
+        width: 50,
+        marginLeft: 300,
+        margin: 10,
+        padding: 3,
+        backgroundColor: '#39CCCC',
+        borderRadius: 30
+  },
+  buttonStyle2: {
+        height: 50,
+        width: 50,
+        marginLeft: 300,
+        margin: 10,
+        padding: 3,
+        backgroundColor: '#39CCCC',
+        borderRadius: 30
+  },
+  textfield: {
+          height: 28,  // have to do it on iOS
+          marginTop: 32,
+          width: 28
   }
+
 });
