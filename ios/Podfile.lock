@@ -27,6 +27,11 @@ PODS:
   - GoogleMaps/Base (2.5.0)
   - GoogleMaps/Maps (2.5.0):
     - GoogleMaps/Base
+  - GooglePlacePicker (2.5.0):
+    - GoogleMaps (= 2.5.0)
+    - GooglePlaces (= 2.5.0)
+  - GooglePlaces (2.5.0):
+    - GoogleMaps/Base (= 2.5.0)
   - React (0.54.2):
     - React/Core (= 0.54.2)
   - react-native-google-maps (0.21.0):
@@ -34,6 +39,8 @@ PODS:
     - GoogleMaps (= 2.5.0)
     - React
   - react-native-maps (0.21.0):
+    - React
+  - react-native-material-kit (0.3.4):
     - React
   - React/Core (0.54.2):
     - yoga (= 0.54.2.React)
@@ -88,8 +95,11 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - GooglePlacePicker
+  - GooglePlaces
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-material-kit (from `../node_modules/react-native-material-kit`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
@@ -110,6 +120,8 @@ SPEC REPOS:
     - boost-for-react-native
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - GooglePlacePicker
+    - GooglePlaces
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -124,6 +136,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-material-kit:
+    :path: "../node_modules/react-native-material-kit"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -134,11 +148,14 @@ SPEC CHECKSUMS:
   glog: 1de0bb937dccdc981596d3b5825ebfb765017ded
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
+  GooglePlacePicker: 1573e644ab54564d95c2643edc0f29091609e966
+  GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
   React: c237e42de9c70e5cac6eeb52b4cfd3a0910c1f00
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
+  react-native-material-kit: f7bf5fd284396674f1fae7095a1d7581ba6d7349
   yoga: 55da126afc384965b96bff46652464373b330add
 
-PODFILE CHECKSUM: 1f563c1684ca95bc6f9b0800fa8deb9573591b23
+PODFILE CHECKSUM: f22988b064b03509f50b30ff828e21c1a300e8c0
 
 COCOAPODS: 1.5.0

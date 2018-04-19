@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, View, Dimensions, Picker } from 'react-native';
+import { AppRegistry, StyleSheet, View, Dimensions, Button } from 'react-native';
 import MapView from 'react-native-maps';
 import axios from 'axios';
 import { formatDate } from './helpers';
 import config from './config.json';
+import CheckBox from 'react-native-check-box';
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -24,7 +25,8 @@ export default class MapExample extends Component {
       },
       markers: [],
       articles: [],
-      currentArticle: ''
+      checkedArticles: [],
+      showCheckboxes: false
     };
   }
 
@@ -88,39 +90,61 @@ export default class MapExample extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
-  changeArticle(value) {
-    this.setState({ currentArticle: value });
-    let article = this.state.articles.find(item => item.name === value);
-    if (article) {
+  clickArticle(article) {
+    let newArticles = this.state.checkedArticles;
+    let ind = this.state.checkedArticles.indexOf(article);
+    if (ind >= 0) {
+      newArticles.splice(ind, 1);
+    } else {
+      newArticles.push(article);
+    }
+    this.setState({ checkedArticles: newArticles });
+    if (newArticles.length > 0) {
       jsonValue = []
-      article.codes.forEach(code => jsonValue.push({
-        article: code
-      }));
-      let filter = JSON.stringify({
-        where: {
-          or: jsonValue
-        }
-      });
-      axios.get(`${config.backend}/crimes?filter=${filter}`)
-      .then(res => {
-        let markers = res.data;
-        markers.forEach((item, i) => {
-          let catalogArticle = this.state.articles.find(a => a.codes.indexOf(item.article) >= 0);
-          if (catalogArticle) {
-            item.title = catalogArticle.name;
-            item.date = formatDate(item.crime_date);
-            item.color = catalogArticle.color;
-          } else {
-            item.title = '';
-            item.date = '';
-            item.color = '#2E8B57';
+      newArticles.forEach(art => {
+        art.codes.forEach(code => jsonValue.push({
+          article: code
+        }));
+        let filter = JSON.stringify({
+          where: {
+            or: jsonValue
           }
         });
-        this.setState({ markers });
-      }).catch(e => {
-        console.error(e);
+        axios.get(`${config.backend}/crimes?filter=${filter}`)
+        .then(res => {
+          let markers = res.data;
+          markers.forEach((item, i) => {
+            let catalogArticle = this.state.articles.find(a => a.codes.indexOf(item.article) >= 0);
+            if (catalogArticle) {
+              item.title = catalogArticle.name;
+              item.date = formatDate(item.crime_date);
+              item.color = catalogArticle.color;
+            } else {
+              item.title = '';
+              item.date = '';
+              item.color = '#2E8B57';
+            }
+          });
+          this.setState({ markers });
+        }).catch(e => {
+          console.error(e);
+        });
       });
+    } else {
+      this.setState({ markers: [] });
     }
+  }
+
+  Press = () => {
+    this.state.articles.map((item, ind) => (
+      <CheckBox
+        style={ styles.CheckBox }
+        onClick={ () => this.clickArticle(item) }
+        isChecked={ !!this.state.checkedArticles.find(a => a === item) }
+        leftText={ item.name }
+        key={ ind }
+      />
+    ))
   }
   
   render() {
@@ -147,21 +171,31 @@ export default class MapExample extends Component {
             )
           })}
         </MapView>
-        <Picker
-          selectedValue={ this.state.currentArticle }
-          onValueChange={ value => this.changeArticle(value) }
-        >
-          <Picker.Item label="Choose one" value="" />
-          { this.state.articles.map((item, ind) => (
-            <Picker.Item
-              label={ item.name }
-              value={ item.name }
-              key={ ind }
-            />
-          )) }
-        </Picker>
+         
+        <View style={ styles.ButtonContainer }>
+          <Button
+            color="white"
+            title = "Crime Types"
+            onPress = { () => this.setState({ showCheckboxes: !this.state.showCheckboxes }) }
+          />
+          { this.state.showCheckboxes && 
+            <View style={ styles.Checkboxes }>
+              { this.state.articles.map((item, ind) => (
+                <CheckBox
+                  style={ styles.CheckBox }
+                  onClick={ () => this.clickArticle(item) }
+                  isChecked={ !!this.state.checkedArticles.find(a => a === item) }
+                  leftText={ item.name }
+                  leftTextStyle = { {color:'#39CCCC', fontSize: 15} }
+                  key={ ind }
+                />
+              )) }
+            </View>
+          }
+        </View>
       </View>
-    );
+   );
+  
   }
 }
 const styles = StyleSheet.create({
@@ -172,5 +206,26 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject
+  },
+  CheckBox: {
+    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    margin: 0,
+    position: 'relative',
+    color:'#39CCCC'
+  },
+  ButtonContainer: {
+    position: 'absolute',
+    top: 30,
+    right: 10,
+    width: 150,
+    backgroundColor:'#39CCCC',
+    borderRadius: 8
+  },
+  Checkboxes: {
+    backgroundColor: '#FFF',
+    marginTop: 10,
+    borderRadius: 5
   }
 });
