@@ -7,14 +7,18 @@
     "test": "jest"
   },
   "dependencies": {
+    "@remobile/react-native-call": "^1.0.1",
     "axios": "^0.18.0",
     "react": "16.3.1",
     "react-native": "0.54.2",
     "react-native-check-box": "^2.1.0",
+    "react-native-communications": "^2.2.1",
     "react-native-google-places": "^2.5.0",
     "react-native-maps": "^0.21.0",
     "react-native-maps-directions": "^1.6.0",
-    "react-native-material-kit": "^0.5.1"
+    "react-native-material-kit": "^0.5.1",
+    "react-native-swipe-gestures": "^1.0.2",
+    "react-native-swiper": "^1.5.13"
   },
   "devDependencies": {
     "babel-jest": "22.4.3",
