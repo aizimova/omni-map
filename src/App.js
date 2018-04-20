@@ -253,7 +253,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
                     onClick={ () => this.clickArticle(item) }
                     isChecked={ !!this.state.checkedArticles.find(a => a === item) }
                     leftText={ item.name }
-                    leftTextStyle = { {color:'#39CCCC', fontSize: 15} }
+                    leftTextStyle = { {color:'white', fontSize: 15} }
                     key={ ind }
                   />
                 )) }

@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     top: 30,
     right: 10,
     width: 150,
-    backgroundColor:'#43ACC2',
+    backgroundColor:'#02C391',
     borderRadius: 10
   },
   Checkboxes: {
@@ -57,10 +57,10 @@ export const styles = StyleSheet.create({
   },
   routeForm: {
     position: 'relative',
-    width: 310,
+    width: 375,
     height: 70,
     backgroundColor: "white",
-    marginTop: 400
+    marginTop: 485
   },
   lossForm: {
     position: 'relative',
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     margin: 10,
     height: 40,
     bottom: 10,
-    backgroundColor: "#39CCCC",
+    backgroundColor: "#02C391",
     borderRadius:40
   },
   buttonSubmit: {
@@ -86,32 +86,32 @@ export const styles = StyleSheet.create({
     height: 40,
     bottom: 10,
     right: 10,
-    backgroundColor: "#6A5ACD",
+    backgroundColor: "#43ACC2",
     borderRadius:40
   },
   buttonFrom: {
     width: '30%',
-    margin: 15,
+    margin: 20,
     height: 40,
     position: 'absolute',
-    backgroundColor: "blue",
+    backgroundColor: "#43ACC2",
     borderRadius:40
   },
   buttonTo: {
     position:'absolute',
-    margin: 15,
+    margin: 20,
     height: 40,
     width: '30%',
     right: 10,
-    backgroundColor: "green",
+    backgroundColor: "#02C391",
     borderRadius:40
   },
   buttonSos: {
     width: '100%',
     margin: 0,
-    height: '6%',
+    height: 40,
     bottom: 0,
     position: 'absolute',
-    backgroundColor: "red"
+    backgroundColor: "#C76161"
   }
 });
